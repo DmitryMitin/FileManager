@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DevExpress.Skins;
 
 namespace FileManagerProject {
     static class Program {
@@ -13,7 +14,8 @@ namespace FileManagerProject {
         static void Main() {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            SkinManager.EnableFormSkins();
+            Application.Run(new MainForm());
         }
     }
 }
