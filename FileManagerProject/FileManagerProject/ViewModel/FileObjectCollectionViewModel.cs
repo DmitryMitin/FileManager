@@ -20,7 +20,7 @@ namespace FileManagerProject.ViewModel {
                     Files.Add(new FileObject() { Name = item });
                 }
                 var files = Directory.GetFiles(Path);
-                foreach(var item in directories) {
+                foreach(var item in files) {
                     Files.Add(new FileObject() { Name = item });
                 }
             }
