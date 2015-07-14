@@ -28,9 +28,14 @@ namespace FileManagerProject {
             var fluentAPI = mvvmContext2.OfType<FileObjectViewModel>();
             fluentAPI.SetObjectDataSourceBinding(fileObjectBindingSource, x => x.File, x => x.Update());
         }
+        protected override void OnLoad(EventArgs e) {
+            base.OnLoad(e);
+            mainViewModel.Path = @"C:\Code";
+        }
         void InitMainViewModel() {
             mainViewModel = mvvmContext1.GetViewModel<FileObjectCollectionViewModel>();
-            mainViewModel.LoadData();
+            //mainViewModel.LoadData();
+            
 
             var fluentAPI = mvvmContext1.OfType<FileObjectCollectionViewModel>();            
 

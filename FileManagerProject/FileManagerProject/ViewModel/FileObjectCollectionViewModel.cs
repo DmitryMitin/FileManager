@@ -35,15 +35,15 @@ namespace FileManagerProject.ViewModel {
             LoadData();
         }
         List<FileObject> GetFilteredFiles(List<FileObject> files) {
-            if (files == null) return null;
-            if (FilterExt == null) return files;
-            string filter = string.Empty;            
+            if(files == null) return null;
+            if(FilterExt == null) return files;
+            string filter = string.Empty;
             foreach(string f in FilterExt)
                 filter += f;
             if (string.IsNullOrEmpty(filter)) return files;
             List<FileObject> filteredFiles = new List<FileObject>();
-            foreach (FileObject file in files) {
-                if(filter.Contains(file.Ext))
+            foreach(FileObject file in files) {
+                if(filter.Contains(file.Ext) && !string.IsNullOrEmpty(file.Ext))
                     filteredFiles.Add(file);
             }
             return filteredFiles;
@@ -52,7 +52,7 @@ namespace FileManagerProject.ViewModel {
             Process.Start(file.FileInfo.FullName);
         }
         public virtual bool CanOpen(FileObject file) {
-            return !(file is DirectoryObject);
+            return file != null && !(file is DirectoryObject);
         }
         public virtual void Forward(FileObject file) {
             DirectoryObject directory = file as DirectoryObject;
@@ -62,25 +62,29 @@ namespace FileManagerProject.ViewModel {
                 Path = directory.DirectoryInfo.FullName;
         }
         public virtual bool CanForward(FileObject file) {
-            return file is DirectoryObject;
+            return file != null && file is DirectoryObject;
         }
         public virtual void Back() {
-            Path = CurrentDirectory.Parent.FullName;
+            if(CurrentDirectory != null && CurrentDirectory.Parent == null)
+                Path = string.Empty;
+            else
+                Path = CurrentDirectory.Parent.FullName;
         }
         public virtual bool CanBack() {
             return CurrentDirectory != null && (CurrentDirectory.Parent != null || CurrentDirectory.Root.Name == CurrentDirectory.Name);
         }
         object lockObject = new object();
         protected void AddFiles(List<FileObject> files) {
+            if(files.Count == 0) return;
             Files.RaiseListChangedEvents = false;
             List<FileObject> filteredFiles = GetFilteredFiles(files);
-            if (filteredFiles != null) {
-                foreach (var item in filteredFiles) {
+            if(filteredFiles != null) {
+                foreach(var item in filteredFiles) {
                     Files.Add(item);
                 }
             }
-            List<FileObject> sortedList = Files.OrderBy(x => x.Name).OrderByDescending(x => x.FileInfo == null).ToList();
-            Files = new BindingList<FileObject>(sortedList);
+            //List<FileObject> sortedList = Files.OrderBy(x => x.Name).OrderByDescending(x => x.FileInfo == null).ToList();
+            //Files = new BindingList<FileObject>(sortedList);
             Files.RaiseListChangedEvents = true;
             Files.ResetBindings();
         }
@@ -92,7 +96,9 @@ namespace FileManagerProject.ViewModel {
             if(Directory.Exists(Path)) {
                 CurrentDirectory = new DirectoryInfo(Path);
                 AddBackItem();
-                DataLoader.GetDataAsync(Path, AddFiles);
+                var context = TaskScheduler.FromCurrentSynchronizationContext();
+                Task.Factory.StartNew(() => DataLoader.SearchFilesAsync(Path, AddFiles, context, "ButtonsPanel"));
+                
             }
             else {
                 var items = Directory.GetLogicalDrives();

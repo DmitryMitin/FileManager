@@ -11,16 +11,17 @@ using FileManagerProject.Model;
 
 namespace FileManagerProject.Data {
     public static class DataLoader {
-        public static void GetDataAsync(string path, Action<List<FileObject>> callback, string searchPattern = "*") {
+        public static void GetDataAsync(string path, Action<List<FileObject>> callback, string searchPattern = "") {
             var taksGetDirectories = Task.Factory.StartNew<List<FileObject>>( () => GetDirectories(path));
             var taksGetFiles = Task.Factory.StartNew<List<FileObject>>(() => GetFiles(path, searchPattern));
             taksGetDirectories.ContinueWith(tasks => callback(taksGetDirectories.Result), TaskScheduler.FromCurrentSynchronizationContext());
             taksGetFiles.ContinueWith(tasks => callback(taksGetFiles.Result), TaskScheduler.FromCurrentSynchronizationContext());
         }
         public static List<FileObject> GetFiles(string path, string searchPattern) {
-            var files = Directory.GetFiles(path, searchPattern);
+            var files = Directory.GetFiles(path);
             List<FileObject> result = new List<FileObject>();
             foreach(var item in files) {
+                if(!string.IsNullOrEmpty(searchPattern) && !System.IO.Path.GetFileNameWithoutExtension(item).Contains(searchPattern)) continue;
                 FileInfo info = new FileInfo(item);
                 result.Add(new FileObject()
                 {
@@ -48,6 +49,16 @@ namespace FileManagerProject.Data {
                 });
             }
             return result;
+        }
+        public static void SearchFilesAsync(string path, Action<List<FileObject>> callback, TaskScheduler taskScheduler, string searchPattern = "" ) {
+            var directories = Directory.GetDirectories(path);
+            if(directories.Count() > 0) {
+                foreach(string item in directories) {
+                    Task.Factory.StartNew(() => SearchFilesAsync(item, callback, taskScheduler, searchPattern)); 
+                    var task = Task.Factory.StartNew<List<FileObject>>(() => GetFiles(item, searchPattern));
+                    task.ContinueWith(tasks => callback(task.Result), taskScheduler);
+                }
+            }
         }
     }
 
