@@ -11,7 +11,7 @@ namespace FileManagerProject.Model {
         public string Name { get; set; }
         public long Size { get; set; }
         public string Ext { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; }        
         [Display(AutoGenerateField = false)]
         public FileInfo FileInfo { get; set; }
     }
