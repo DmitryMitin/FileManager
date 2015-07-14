@@ -45,9 +45,7 @@
             this.ItemForExt = new DevExpress.XtraLayout.LayoutControlItem();
             this.ItemForDate = new DevExpress.XtraLayout.LayoutControlItem();
             this.myBar1 = new DevExpress.XtraBars.BarManager(this.components);
-            this.bar1 = new DevExpress.XtraBars.Bar();
-            this.barEditItem1 = new DevExpress.XtraBars.BarEditItem();
-            this.repositoryItemButtonEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
+            this.bar1 = new DevExpress.XtraBars.Bar();            
             this.barCheckItem1 = new DevExpress.XtraBars.BarCheckItem();
             this.barCheckItem2 = new DevExpress.XtraBars.BarCheckItem();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
@@ -72,8 +70,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ItemForSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForExt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForDate)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.myBar1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.myBar1)).BeginInit();            
             this.SuspendLayout();
             // 
             // gridControl1
@@ -273,11 +270,8 @@
             this.myBar1.Form = this;
             this.myBar1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.barCheckItem1,
-            this.barCheckItem2,
-            this.barEditItem1});
+            this.barCheckItem2});
             this.myBar1.MaxItemId = 4;
-            this.myBar1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            this.repositoryItemButtonEdit1});
             // 
             // bar1
             // 
@@ -286,26 +280,10 @@
             this.bar1.DockRow = 0;
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.barEditItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.barCheckItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.barCheckItem2)});
-            this.bar1.Offset = 1;
+            this.bar1.Offset = 2;
             this.bar1.Text = "Tools";
-            // 
-            // barEditItem1
-            // 
-            this.barEditItem1.Caption = "barEditItem1";
-            this.barEditItem1.Edit = this.repositoryItemButtonEdit1;
-            this.barEditItem1.Id = 2;
-            this.barEditItem1.Name = "barEditItem1";
-            this.barEditItem1.Width = 200;
-            // 
-            // repositoryItemButtonEdit1
-            // 
-            this.repositoryItemButtonEdit1.AutoHeight = false;
-            this.repositoryItemButtonEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton()});
-            this.repositoryItemButtonEdit1.Name = "repositoryItemButtonEdit1";
             // 
             // barCheckItem1
             // 
@@ -378,8 +356,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ItemForSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForExt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForDate)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.myBar1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.myBar1)).EndInit();            
             this.ResumeLayout(false);
 
         }
@@ -407,9 +384,7 @@
         private DevExpress.XtraBars.BarDockControl barDockControlBottom;
         private DevExpress.XtraBars.BarDockControl barDockControlTop;
         private DevExpress.XtraBars.BarManager myBar1;
-        private DevExpress.XtraBars.Bar bar1;
-        private DevExpress.XtraBars.BarEditItem barEditItem1;
-        private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit repositoryItemButtonEdit1;
+        private DevExpress.XtraBars.Bar bar1;        
         private DevExpress.XtraBars.BarCheckItem barCheckItem1;
         private DevExpress.XtraBars.BarCheckItem barCheckItem2;
         private DevExpress.XtraGrid.Columns.GridColumn colName;

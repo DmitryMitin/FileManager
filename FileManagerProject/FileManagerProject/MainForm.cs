@@ -32,10 +32,9 @@ namespace FileManagerProject {
             mainViewModel = mvvmContext1.GetViewModel<FileObjectCollectionViewModel>();
             mainViewModel.LoadData();
 
-            var fluentAPI = mvvmContext1.OfType<FileObjectCollectionViewModel>();
-            repositoryItemButtonEdit1.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(repositoryItemButtonEdit1_ButtonClick);
+            var fluentAPI = mvvmContext1.OfType<FileObjectCollectionViewModel>();            
 
-            fluentAPI.SetBinding(gridControl1, gControl => gControl.DataSource, x => x.FilesFiltered);
+            fluentAPI.SetBinding(gridControl1, gControl => gControl.DataSource, x => x.Files);
             fluentAPI.SetBinding(barCheckItem1, cItem1 => cItem1.Checked, x => x.FilterCS);
             fluentAPI.SetBinding(barCheckItem2, cItem2 => cItem2.Checked, x => x.FilterVB);
 
@@ -53,10 +52,6 @@ namespace FileManagerProject {
             fluentAPI.WithEvent<DevExpress.XtraGrid.Views.Grid.RowCellClickEventArgs>(gridView1, "RowCellClick")
                 .EventToCommand(x => x.Forward(null), x => x.SelectedFile,
                 args => (args.Clicks == 2) && (args.Button == MouseButtons.Left));
-        }
-
-        void repositoryItemButtonEdit1_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e) {
-            throw new NotImplementedException();
         }
     }
 }

@@ -12,7 +12,6 @@ namespace FileManagerProject.ViewModel {
     public class FileObjectCollectionViewModel {
         public virtual DirectoryInfo CurrentDirectory { get; set; }
         public virtual BindingList<FileObject> Files { get; set; }
-        public virtual BindingList<FileObject> FilesFiltered { get; set; }
         public virtual bool FilterCS { get; set; }
         public virtual bool FilterVB { get; set; }
         public virtual List<string> FilterExt { get; set; }
@@ -33,16 +32,17 @@ namespace FileManagerProject.ViewModel {
                 FilterExt.Add(filter);
             else
                 FilterExt.Remove(filter);
-            FilesFiltered = GetFilesFiltered();
+            LoadData();
         }
-        BindingList<FileObject> GetFilesFiltered() {
-            if(Files == null) return null;
-            string filter = string.Empty;
+        List<FileObject> GetFilteredFiles(List<FileObject> files) {
+            if (files == null) return null;
+            if (FilterExt == null) return files;
+            string filter = string.Empty;            
             foreach(string f in FilterExt)
                 filter += f;
-            if(string.IsNullOrEmpty(filter)) return Files;
-            BindingList<FileObject> filteredFiles = new BindingList<FileObject>();
-            foreach(FileObject file in Files) {
+            if (string.IsNullOrEmpty(filter)) return files;
+            List<FileObject> filteredFiles = new List<FileObject>();
+            foreach (FileObject file in files) {
                 if(filter.Contains(file.Ext))
                     filteredFiles.Add(file);
             }
@@ -73,12 +73,14 @@ namespace FileManagerProject.ViewModel {
         object lockObject = new object();
         protected void AddFiles(List<FileObject> files) {
             Files.RaiseListChangedEvents = false;
-            foreach(var item in files) {
-                Files.Add(item);
+            List<FileObject> filteredFiles = GetFilteredFiles(files);
+            if (filteredFiles != null) {
+                foreach (var item in filteredFiles) {
+                    Files.Add(item);
+                }
             }
             List<FileObject> sortedList = Files.OrderBy(x => x.Name).OrderByDescending(x => x.FileInfo == null).ToList();
             Files = new BindingList<FileObject>(sortedList);
-            FilesFiltered = new BindingList<FileObject>(Files);
             Files.RaiseListChangedEvents = true;
             Files.ResetBindings();
         }
