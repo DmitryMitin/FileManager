@@ -4,11 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using DevExpress.Mvvm;
-using DevExpress.Mvvm.DataAnnotations;
 using FileManagerProject.Data;
 using FileManagerProject.Model;
 
@@ -29,7 +25,10 @@ namespace FileManagerProject.ViewModel {
         }
         public virtual void Forward(FileObject file) {
             DirectoryObject directory = file as DirectoryObject;
-            Path = directory.DirectoryInfo.FullName;
+            if(directory.DirectoryInfo == null)
+                Path = string.Empty;
+            else
+                Path = directory.DirectoryInfo.FullName;
         }
         public virtual bool CanForward(FileObject file) {
             return file is DirectoryObject;
@@ -38,7 +37,7 @@ namespace FileManagerProject.ViewModel {
             Path = CurrentDirectory.Parent.FullName;
         }
         public virtual bool CanBack() {
-            return CurrentDirectory != null && CurrentDirectory.Parent != null;
+           return CurrentDirectory != null && (CurrentDirectory.Parent != null || CurrentDirectory.Root.Name == CurrentDirectory.Name);
         }
         object lockObject = new object();
         protected void AddFiles(List<FileObject> files) {
@@ -52,12 +51,28 @@ namespace FileManagerProject.ViewModel {
             Files.ResetBindings();
         }
         protected void OnPathChanged() {
-            if(Directory.Exists(Path)) {
-                Files = new BindingList<FileObject>();
-                CurrentDirectory = new DirectoryInfo(Path);
-                AddBackItem();
-                DataLoader.GetDataAsync(Path, AddFiles);
-            }
+            LoadData();
+        }
+         public void LoadData() {
+             Files = new BindingList<FileObject>();
+             if(Directory.Exists(Path)) {
+                 CurrentDirectory = new DirectoryInfo(Path);
+                 AddBackItem();
+                 DataLoader.GetDataAsync(Path, AddFiles);
+             }
+             else {
+                 var items = Directory.GetLogicalDrives();
+                 foreach(var item in items) {
+                     Files.Add(new DirectoryObject()
+                     {
+                         Name = item,
+                         DirectoryInfo = new DirectoryInfo(item)
+                     });
+                     
+                 }
+             }
+                
+
         }
         void AddBackItem() {
             if(CanBack()) {
@@ -65,7 +80,7 @@ namespace FileManagerProject.ViewModel {
                 {
                     Name = "...",
                     DirectoryInfo = CurrentDirectory.Parent,
-                    Date = CurrentDirectory.Parent.CreationTime,
+                    Date = CurrentDirectory.Parent != null ? CurrentDirectory.Parent.CreationTime : new DateTime(2010,1,1),
                     Ext = "[DIR]"
                 });
             }

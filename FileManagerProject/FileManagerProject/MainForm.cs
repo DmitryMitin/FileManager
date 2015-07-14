@@ -28,8 +28,8 @@ namespace FileManagerProject {
         }
         void InitMainViewModel() {
             mainViewModel = mvvmContext1.GetViewModel<FileObjectCollectionViewModel>();
-
-            mainViewModel.Path = @"c:\";
+            mainViewModel.LoadData();
+            //mainViewModel.Path = @"c:\";
 
             var fluentAPI = mvvmContext1.OfType<FileObjectCollectionViewModel>();
 
