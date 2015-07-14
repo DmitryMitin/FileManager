@@ -23,13 +23,14 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.mvvmContext1 = new DevExpress.Utils.MVVM.MVVMContext();
-            this.mvvmContext2 = new DevExpress.Utils.MVVM.MVVMContext();
+            this.mvvmContext1 = new DevExpress.Utils.MVVM.MVVMContext(this.components);
+            this.mvvmContext2 = new DevExpress.Utils.MVVM.MVVMContext(this.components);
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.NameTextEdit = new DevExpress.XtraEditors.TextEdit();
-            this.fileObjectBindingSource = new System.Windows.Forms.BindingSource();
+            this.fileObjectBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.SizeTextEdit = new DevExpress.XtraEditors.TextEdit();
             this.ExtTextEdit = new DevExpress.XtraEditors.TextEdit();
             this.DateDateEdit = new DevExpress.XtraEditors.DateEdit();
@@ -74,6 +75,7 @@
             // 
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
+            this.gridView1.OptionsBehavior.Editable = false;
             // 
             // mvvmContext1
             // 

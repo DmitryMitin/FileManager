@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,7 @@ namespace FileManagerProject.Model {
         public long Size { get; set; }
         public string Ext { get; set; }
         public DateTime Date { get; set; }
+        [Display(AutoGenerateField = false)]
+        public FileInfo FileInfo { get; set; }
     }
 }

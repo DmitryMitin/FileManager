@@ -12,12 +12,7 @@ namespace FileManagerProject.ViewModel {
             RegisterAsFileObjectMessageRecepient();
         }
         public virtual FileObject File { get; set; }
-        protected virtual void OnFileChanged(){
-
-        }
-        public virtual void Update() { 
-
-        }
+        public virtual void Update() { }
         public void RegisterAsFileObjectMessageRecepient() {
             Messenger.Default.Register<FileObject>(this, OnFileMessage);
         }
