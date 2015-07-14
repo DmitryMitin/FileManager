@@ -14,10 +14,41 @@ namespace FileManagerProject.ViewModel {
     public class FileObjectCollectionViewModel {
         public virtual DirectoryInfo CurrentDirectory { get; set; }
         public virtual BindingList<FileObject> Files { get; set; }
+        public virtual BindingList<FileObject> FilesFiltered { get; set; }
+        public virtual bool FilterCS { get; set; }
+        public virtual bool FilterVB { get; set; }
+        public virtual List<string> FilterExt { get; set; }
         public virtual string Path { get; set; }
         public virtual FileObject SelectedFile { get; set; }
         protected void OnSelectedFileChanged() {
             Messenger.Default.Send(SelectedFile);
+        }
+        protected void OnFilterCSChanged() {
+            OnFilterChanged(FilterCS, ".cs");
+        }
+        protected void OnFilterVBChanged() {
+            OnFilterChanged(FilterVB, ".vb");
+        }
+        void OnFilterChanged(bool value, string filter) {
+            if (FilterExt == null) FilterExt = new List<string>();
+            if (value)
+                FilterExt.Add(filter);
+            else
+                FilterExt.Remove(filter);
+            FilesFiltered = GetFilesFiltered();
+        }
+        BindingList<FileObject> GetFilesFiltered() {
+            if (Files == null) return null;
+            string filter = string.Empty;
+            foreach (string f in FilterExt)
+                filter += f;
+            if (string.IsNullOrEmpty(filter)) return Files;
+            BindingList<FileObject> filteredFiles = new BindingList<FileObject>();
+            foreach (FileObject file in Files) {
+                if (filter.Contains(file.Ext))
+                    filteredFiles.Add(file);
+            }
+            return filteredFiles;
         }
         public virtual void Open(FileObject file) {
             Process.Start(file.FileInfo.FullName);
@@ -76,7 +107,8 @@ namespace FileManagerProject.ViewModel {
                         FileInfo = info
                     });
                 }
-            }
+                FilesFiltered = new BindingList<FileObject>(Files);
+            }            
         }
     }
 }
