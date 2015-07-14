@@ -5,9 +5,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
+using FileManagerProject.Data;
 using FileManagerProject.Model;
 
 namespace FileManagerProject.ViewModel {
@@ -64,17 +66,27 @@ namespace FileManagerProject.ViewModel {
             return file is DirectoryObject;
         }
         public virtual void Back() {
-            if(CurrentDirectory != null && CurrentDirectory.Parent != null) { 
-                Path = CurrentDirectory.Parent.FullName;
-            }
+            Path = CurrentDirectory.Parent.FullName;
         }
         public virtual bool CanBack() {
             return CurrentDirectory != null && CurrentDirectory.Parent != null;
+        }
+        object lockObject = new object();
+        protected void AddFiles(List<FileObject> files) {
+            Files.RaiseListChangedEvents = false;
+            foreach(var item in files) {
+                Files.Add(item);
+            }
+            List<FileObject> sortedList = Files.OrderBy(x => x.Name).OrderByDescending(x => x.FileInfo == null).ToList();
+            Files = new BindingList<FileObject>(sortedList);
+            Files.RaiseListChangedEvents = true;
+            Files.ResetBindings();
         }
         protected void OnPathChanged() {
             if(Directory.Exists(Path)) {
                 Files = new BindingList<FileObject>();
                 CurrentDirectory = new DirectoryInfo(Path);
+<<<<<<< HEAD
                 if(CanBack()) {
                     Files.Add(new DirectoryObject()
                     {
@@ -109,6 +121,22 @@ namespace FileManagerProject.ViewModel {
                 }
                 FilesFiltered = new BindingList<FileObject>(Files);
             }            
+=======
+                AddBackItem();
+                DataLoader.GetDataAsync(Path, AddFiles);
+            }
+        }
+        void AddBackItem() {
+            if(CanBack()) {
+                Files.Add(new DirectoryObject()
+                {
+                    Name = "...",
+                    DirectoryInfo = CurrentDirectory.Parent,
+                    Date = CurrentDirectory.Parent.CreationTime,
+                    Ext = "[DIR]"
+                });
+            }
+>>>>>>> 162ae867b1c5f6a25853e4b07ef065cb830678dd
         }
     }
 }
